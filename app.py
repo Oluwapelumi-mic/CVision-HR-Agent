@@ -1,5 +1,5 @@
 # app.py
-from flask import Flask, render_template, request, jsonify, session, url_for, redirect
+from flask import Flask, render_template, request, jsonify, session, url_for, redirect, send_file
 from dotenv import load_dotenv
 import os
 import json
@@ -335,7 +335,7 @@ def process_cv_batch(job_id, cv_ids):
 
 @app.route('/')
 def index():
-    return app.send_file('index.html')
+    return send_file('index.html')
 
 @app.route('/about')
 def about():
