@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- Same content as templates/index.html but updating the template variables -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CVision</title>
+    <link rel="icon" type="image/svg+xml" href="/static/cvision-logo.svg">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <!-- ...keeping all the styles... -->
+    <style>
+        :root {
+            --primary-color: #8a4fff;
+            --secondary-color: #6633cc;
+            --dark-blue: #1a1744;
+            --light-purple: #f3f0ff;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #ffffff;
+            background-image: linear-gradient(180deg, #ffffff 70%, var(--light-purple) 100%);
+            min-height: 100vh;
+        }
+        
+        .navbar {
+            padding: 1.2rem 2rem;
+            background-color: white;
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 2rem;
+            color: #8a4fff;
+            display: flex;
+            align-items: center;
+            font-style: italic;
+            text-decoration: none;
+        }
+        
+        .navbar-brand img {
+            height: 40px;
+            margin-right: 10px;
+        }
+        
+        .navbar-brand span {
+            background: linear-gradient(135deg, #8a4fff 0%, #6633cc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+            font-size: 2rem;
+        }
+        
+        .nav-link {
+            color: #555;
+            margin: 0 0.8rem;
+            transition: color 0.3s;
+            font-weight: normal;
+            font-size: 1.25rem;
+            padding: 0.5rem 1.2rem;
+        }
+
+        .nav-link.active {
+            font-weight: 800;
+            color: var(--primary-color);
+            font-size: 1.4rem;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            padding: 0.6rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 51, 204, 0.3);
+        }
+        
+        .hero-section {
+            padding: 6rem 0 3rem;
+            position: relative;
+        }
+        
+        .hero-section::after {
+            content: '';
+            position: absolute;
+            bottom: -50px;
+            left: 0;
+            width: 100%;
+            height: 200px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23f3f0ff' fill-opacity='1' d='M0,128L80,138.7C160,149,320,171,480,176C640,181,800,171,960,144C1120,117,1280,75,1360,53.3L1440,32L1440,320L1360,320C1280,320,1120,320,960,320C800,320,640,320,480,320C320,320,160,320,80,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
+            background-size: cover;
+            background-repeat: no-repeat;
+            z-index: -1;
+            pointer-events: none;
+        }
+        
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: var(--dark-blue);
+            margin-bottom: 1.5rem;
+        }
+        
+        .hero-text {
+            font-size: 1.2rem;
+            color: #555;
+            margin-bottom: 2rem;
+        }
+        
+        .content-card {
+            border-radius: 12px;
+            border: none;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+        
+        .content-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+        }
+        
+        .card-header {
+            background-color: var(--primary-color);
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 600;
+            padding: 1.2rem 1.5rem;
+        }
+        
+        .form-control {
+            padding: 0.8rem 1rem;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .form-control:focus {
+            box-shadow: 0 0 0 3px rgba(138, 79, 255, 0.2);
+            border-color: var(--primary-color);
+        }
+        
+        .call-now-btn {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.6rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .call-now-btn:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 51, 204, 0.3);
+        }
+        
+        .chat-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: var(--dark-blue);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+        
+        .chat-button:hover {
+            transform: scale(1.1);
+            background-color: var(--primary-color);
+        }
+
+        .hero-logo-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            height: 100%;
+            padding: 0;
+            margin-top: -8rem;
+        }
+
+        .logo-wrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transform: translateY(-60px);
+        }
+
+        .hero-logo {
+            width: 280px;
+            height: auto;
+            margin-bottom: 2rem;
+            position: relative;
+            z-index: 2;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .wave-svg {
+            position: absolute;
+            top: 15%;
+            left: 50%;
+            transform: translate(-50%, -30%);
+            width: 120%;
+            height: auto;
+            z-index: 1;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+                text-align: center;
+            }
+            
+            .hero-text {
+                text-align: center;
+            }
+            
+            .navbar {
+                padding: 1rem;
+            }
+            
+            .navbar-brand {
+                font-size: 1.5rem;
+            }
+            
+            .navbar-brand img {
+                height: 32px;
+            }
+            
+            .hero-section {
+                padding: 3rem 0 2rem;
+            }
+            
+            .content-card {
+                margin: 0 1rem;
+            }
+            
+            .card-header {
+                font-size: 1.25rem;
+                padding: 1rem;
+            }
+            
+            .call-now-btn {
+                width: 100%;
+                margin-top: 1rem;
+                margin-left: 0 !important;
+            }
+
+            .chat-button {
+                bottom: 20px;
+                right: 20px;
+                width: 50px;
+                height: 50px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .form-control {
+                font-size: 0.9rem;
+            }
+            
+            .btn-lg {
+                padding: 0.5rem 1.5rem;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <img src="/static/cvision-logo.svg" alt="CVision Logo">
+                <span>CVision</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/">Home</a>
+                    </li>
+
+                </ul>
+                <a href="/about" class="btn call-now-btn ms-3">Learn More</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Hero Section -->
+        <div class="hero-section">
+            <div class="row align-items-center">
+                <div class="col-lg-7">
+                    <h1 class="hero-title">The Power of CV Optimization</h1>
+                    <p class="hero-text">Let CVision help you find the best candidates for your job openings with intelligent resume analysis and ranking</p>
+                    
+                    <!-- Job Creation Card -->
+                    <div class="content-card card">
+                        <div class="card-header">
+                            Create a New Job
+                        </div>
+                        <div class="card-body p-4">
+                            <form action="/create-job" method="post">
+                                <div class="mb-3">
+                                    <label for="job_title" class="form-label">Job Title</label>
+                                    <input type="text" class="form-control" id="job_title" name="job_title" required placeholder="Enter job position title">
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <label for="job_description" class="form-label">Job Description</label>
+                                    <textarea class="form-control" id="job_description" name="job_description" rows="6" required placeholder="Include detailed requirements, responsibilities, and qualifications for better results..."></textarea>
+                                </div>
+                                
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-primary btn-lg">Continue to Upload CVs</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-5 d-none d-lg-block">
+                    <div class="hero-logo-container">
+                        <div class="logo-wrapper">
+                            <img src="/static/cvision-logo.svg" alt="CVision Logo" class="hero-logo">
+                            <svg class="wave-svg" viewBox="0 0 500 400" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M388.9,179.7c-30.4-31.4-137.5-29.9-200.5,1.5s-154.7,214.4-68.6,217.9s124.4-52.9,193-120.5 S419.3,211.1,388.9,179.7z" fill="#8a4fff" opacity="0.3"></path>
+                                <path d="M419.5,142.7c-30.4-31.4-168.1-29.9-231.1,1.5S33.7,358.7,119.8,362.1s124.4-52.9,193-120.5 S449.9,174.1,419.5,142.7z" fill="#6633cc" opacity="0.2"></path>
+                                <path d="M449.5,112.7c-30.4-31.4-168.1-29.9-231.1,1.5S63.7,328.7,149.8,332.1s124.4-52.9,193-120.5 S479.9,144.1,449.5,112.7z" fill="#8a4fff" opacity="0.1"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating chat button -->
+    <div class="chat-button">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M21 11.5C21.0034 12.8199 20.6951 14.1219 20.1 15.3C19.3944 16.7118 18.3098 17.8992 16.9674 18.7293C15.6251 19.5594 14.0782 19.9994 12.5 20C11.1801 20.0035 9.87812 19.6951 8.7 19.1L3 21L4.9 15.3C4.30493 14.1219 3.99656 12.8199 4 11.5C4.00061 9.92179 4.44061 8.37488 5.27072 7.03258C6.10083 5.69028 7.28825 4.6056 8.7 3.90003C9.87812 3.30496 11.1801 2.99659 12.5 3.00003H13C15.0843 3.11502 17.053 3.99479 18.5291 5.47089C20.0052 6.94699 20.885 8.91568 21 11V11.5Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

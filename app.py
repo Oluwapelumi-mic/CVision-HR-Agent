@@ -335,7 +335,7 @@ def process_cv_batch(job_id, cv_ids):
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return app.send_file('index.html')
 
 @app.route('/about')
 def about():
