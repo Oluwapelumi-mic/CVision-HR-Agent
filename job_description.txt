@@ -1,0 +1,18 @@
+Job Title: junior Software Engineer(Data Science)
+
+Requirements:
+- 5+ years of experience in Python development
+- Experience with cloud platforms (AWS/Azure/GCP)
+- Strong knowledge of CI/CD pipelines
+-familiarity with model buildings ,linear regression, classification
+- good use of AI to build AI oriented solutions and Agents
+- Bachelor's degree in Computer Science or equivalent(preferably a first class honors or a second class upper)
+- Excellent communication skills
+
+Responsibilities:
+- Data collection and cleaning
+- Exploratory data analysis (EDA)
+- Model building and evaluation
+- Optimize existing codebase for performance
+- collaborate with junior developers
+- Collaborate with product managers to define features

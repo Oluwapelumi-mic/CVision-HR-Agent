@@ -1,0 +1,27 @@
+
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Circle -->
+  <circle cx="100" cy="100" r="90" fill="#ffffff" stroke="#6633cc" stroke-width="5"/>
+  
+  <!-- Stylized Document -->
+  <rect x="70" y="55" width="60" height="80" rx="8" ry="8" fill="#f5f5f5" stroke="#1a1744" stroke-width="3"/>
+  
+  <!-- Document Lines (Simplified) -->
+  <line x1="80" y1="75" x2="120" y2="75" stroke="#6633cc" stroke-width="2.5"/>
+  <line x1="80" y1="90" x2="120" y2="90" stroke="#6633cc" stroke-width="2.5"/>
+  <line x1="80" y1="105" x2="105" y2="105" stroke="#6633cc" stroke-width="2.5"/>
+  
+  <!-- AI Eye/Lens -->
+  <circle cx="100" cy="130" r="15" fill="#ffffff" stroke="#1a1744" stroke-width="3"/>
+  <circle cx="100" cy="130" r="8" fill="#6633cc"/>
+  <circle cx="103" cy="127" r="3" fill="#ffffff"/>
+  
+  <!-- Cute 'C' Shape -->
+  <path d="M60,100 C60,75 78,60 100,60 C122,60 140,75 140,100" 
+        fill="none" stroke="#1a1744" stroke-width="8" stroke-linecap="round"/>
+  
+  <!-- Small Sparkle Details -->
+  <circle cx="150" cy="85" r="4" fill="#6633cc"/>
+  <circle cx="160" cy="100" r="3" fill="#6633cc"/>
+  <circle cx="150" cy="115" r="4" fill="#6633cc"/>
+</svg>

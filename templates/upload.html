@@ -1,0 +1,504 @@
+<!-- templates/upload.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload CVs - CVision</title>
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='cvision-logo.svg') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <style>
+        :root {
+            --primary-color: #8a4fff;
+            --secondary-color: #6633cc;
+            --dark-blue: #1a1744;
+            --light-purple: #f3f0ff;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #ffffff;
+            background-image: linear-gradient(180deg, #ffffff 70%, var(--light-purple) 100%);
+            min-height: 100vh;
+        }
+        
+        .navbar {
+            padding: 1.2rem 2rem;
+            background-color: white;
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 2rem;
+            color: #8a4fff;
+            display: flex;
+            align-items: center;
+            font-style: italic;
+            text-decoration: none;
+        }
+        
+        .navbar-brand img {
+            height: 40px;
+            margin-right: 10px;
+        }
+        
+        .navbar-brand span {
+            background: linear-gradient(135deg, #8a4fff 0%, #6633cc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+            font-size: 2rem;
+        }
+        
+        .nav-link {
+            color: #555;
+            margin: 0 0.8rem;
+            transition: color 0.3s;
+            font-weight: normal;
+            font-size: 1.25rem; /* Increased font size */
+            padding: 0.5rem 1.2rem; /* Added more padding */
+        }
+
+        .nav-link.active {
+            font-weight: 800;
+            color: var(--primary-color);
+            font-size: 1.4rem; /* Even larger for active state */
+        }
+        
+        .btn-primary, .btn-success {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            padding: 0.6rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover, .btn-success:hover {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 51, 204, 0.3);
+        }
+        
+        .btn-success {
+            background-color: var(--dark-blue) !important;
+            border-color: var(--dark-blue) !important;
+        }
+        
+        .btn-success:hover {
+            background-color: var(--dark-blue) !important;
+            border-color: var(--dark-blue) !important;
+            opacity: 0.9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(26, 23, 68, 0.3);
+        }
+        
+        #process-btn.btn-success {
+            background-color: var(--dark-blue) !important;
+            border-color: var(--dark-blue) !important;
+        }
+        
+        #process-btn.btn-success:hover {
+            background-color: var(--dark-blue) !important;
+            border-color: var(--dark-blue) !important;
+            opacity: 0.9;
+        }
+
+        .hero-section {
+            padding: 4rem 0 3rem;
+            position: relative;
+        }
+        
+        .hero-section::after {
+            content: '';
+            position: absolute;
+            bottom: -50px;
+            left: 0;
+            width: 100%;
+            height: 200px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23f3f0ff' fill-opacity='1' d='M0,128L80,138.7C160,149,320,171,480,176C640,181,800,171,960,144C1120,117,1280,75,1360,53.3L1440,32L1440,320L1360,320C1280,320,1120,320,960,320C800,320,640,320,480,320C320,320,160,320,80,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
+            background-size: cover;
+            background-repeat: no-repeat;
+            z-index: -1;
+            pointer-events: none;
+        }
+        
+        .hero-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--dark-blue);
+            margin-bottom: 1rem;
+        }
+        
+        .hero-text {
+            font-size: 1.2rem;
+            color: #555;
+            margin-bottom: 2rem;
+        }
+        
+        .content-card {
+            border-radius: 12px;
+            border: none;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+        
+        .content-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+        }
+        
+        .card-header {
+            background-color: var(--primary-color);
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 600;
+            padding: 1.2rem 1.5rem;
+        }
+        
+        .form-control {
+            padding: 0.8rem 1rem;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .form-control:focus {
+            box-shadow: 0 0 0 3px rgba(138, 79, 255, 0.2);
+            border-color: var(--primary-color);
+        }
+        
+        .call-now-btn {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.6rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .call-now-btn:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 51, 204, 0.3);
+        }
+        
+        /* File list styling */
+        .file-list-item {
+            padding: 1rem;
+            margin-bottom: 0.8rem;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .file-icon {
+            width: 32px;
+            height: 32px;
+            margin-right: 1rem;
+        }
+        
+        /* Chat button */
+        .chat-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: var(--dark-blue);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+        
+        .chat-button:hover {
+            transform: scale(1.1);
+            background-color: var(--primary-color);
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.2rem;
+                text-align: center;
+            }
+
+            .hero-text {
+                text-align: center;
+            }
+
+            .hero-section {
+                padding: 3rem 0;
+            }
+
+            .content-card {
+                margin: 0 1rem;
+            }
+
+            .card-header {
+                font-size: 1.25rem;
+                padding: 1rem;
+            }
+
+            .file-list-item {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 0.8rem;
+            }
+
+            .file-list-item .badge {
+                margin-top: 0.5rem;
+                align-self: flex-start;
+            }
+
+            .btn-lg {
+                padding: 0.5rem 1.5rem;
+                font-size: 1rem;
+            }
+
+            .call-now-btn {
+                width: 100%;
+                margin-top: 1rem;
+                margin-left: 0 !important;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .hero-title {
+                font-size: 1.8rem;
+            }
+
+            .hero-text {
+                font-size: 1rem;
+            }
+
+            .form-control {
+                font-size: 0.9rem;
+            }
+
+            .card-header {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <img src="{{ url_for('static', filename='cvision-logo.svg') }}" alt="CVision Logo">
+                <span>CVision</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                </ul>
+                <a href="/about" class="btn call-now-btn ms-3">Learn More</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Hero Section -->
+        <div class="hero-section">
+            <div class="row align-items-center">
+                <div class="col-lg-8 mx-auto text-center">
+                    <h1 class="hero-title">Upload Candidate CVs</h1>
+                    <p class="hero-text">Upload resumes for "<strong>{{ job_title }}</strong>" to begin the AI-powered analysis</p>
+                </div>
+            </div>
+            
+            <div class="row justify-content-center mt-4">
+                <div class="col-lg-8">
+                    <!-- Upload Card -->
+                    <div class="content-card card">
+                        <div class="card-header">
+                            Upload CVs
+                        </div>
+                        <div class="card-body p-4">
+                            <form id="upload-form" enctype="multipart/form-data">
+                                <div class="mb-4">
+                                    <div class="p-4 rounded-3 bg-light text-center">
+                                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="mb-3">
+                                            <path d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15" stroke="#8a4fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M17 8L12 3L7 8" stroke="#8a4fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M12 3V15" stroke="#8a4fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                        <label for="cv_files" class="form-label d-block mb-3">
+                                            <strong>Drop files here or click to browse</strong><br>
+                                            <span class="text-muted">Supports PDF, DOCX, TXT</span>
+                                        </label>
+                                        <input type="file" class="form-control" id="cv_files" name="cv_files" multiple accept=".pdf,.docx,.txt" required>
+                                    </div>
+                                </div>
+                                
+                                <div id="file-list" class="mb-4">
+                                    <!-- Uploaded files will appear here -->
+                                </div>
+                                
+                                <div class="d-grid gap-2">
+                                    <button type="submit" class="btn btn-primary btn-lg">Upload CVs</button>
+                                    <button id="process-btn" class="btn btn-success btn-lg" disabled>Process CVs</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating chat button -->
+    <div class="chat-button">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M21 11.5C21.0034 12.8199 20.6951 14.1219 20.1 15.3C19.3944 16.7118 18.3098 17.8992 16.9674 18.7293C15.6251 19.5594 14.0782 19.9994 12.5 20C11.1801 20.0035 9.87812 19.6951 8.7 19.1L3 21L4.9 15.3C4.30493 14.1219 3.99656 12.8199 4 11.5C4.00061 9.92179 4.44061 8.37488 5.27072 7.03258C6.10083 5.69028 7.28825 4.6056 8.7 3.90003C9.87812 3.30496 11.1801 2.99659 12.5 3.00003H13C15.0843 3.11502 17.053 3.99479 18.5291 5.47089C20.0052 6.94699 20.885 8.91568 21 11V11.5Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const uploadForm = document.getElementById('upload-form');
+            const fileList = document.getElementById('file-list');
+            const processBtn = document.getElementById('process-btn');
+            const fileInput = document.getElementById('cv_files');
+            let filesUploaded = false;
+            
+            // Handle file selection and display
+            fileInput.addEventListener('change', function(e) {
+                const files = Array.from(this.files);
+                if(files.length > 0) {
+                    // Clear existing file list
+                    fileList.innerHTML = '';
+                    
+                    // Display selected files
+                    files.forEach(file => {
+                        const fileItem = document.createElement('div');
+                        fileItem.className = 'file-list-item bg-light';
+                        fileItem.innerHTML = `
+                            <div class="d-flex align-items-center">
+                                <svg class="file-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M14 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V8L14 2Z" stroke="#8a4fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M14 2V8H20" stroke="#8a4fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                <span>${file.name}</span>
+                            </div>
+                            <span class="badge bg-secondary">Selected</span>
+                        `;
+                        fileList.appendChild(fileItem);
+                    });
+
+                    // Update the label
+                    const fileInputLabel = document.querySelector('label[for="cv_files"]');
+                    fileInputLabel.innerHTML = `<strong>${files.length} file(s) selected</strong><br>
+                        <span class="text-muted">Click "Upload CVs" to begin upload</span>`;
+                }
+            });
+            
+            uploadForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const formData = new FormData();
+                const files = fileInput.files;
+                
+                // Add each file to formData
+                for(let i = 0; i < files.length; i++) {
+                    formData.append('cv_files', files[i]);
+                }
+                
+                // Show loading state
+                const submitBtn = uploadForm.querySelector('button[type="submit"]');
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Uploading...';
+                
+                fetch('/upload-cv', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        // Update file badges to show success
+                        const fileItems = fileList.querySelectorAll('.file-list-item');
+                        fileItems.forEach(item => {
+                            const badge = item.querySelector('.badge');
+                            badge.className = 'badge bg-success';
+                            badge.textContent = 'Uploaded';
+                        });
+                        
+                        // Enable process button
+                        processBtn.disabled = false;
+                        filesUploaded = true;
+                        
+                        // Reset the upload button
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = 'Upload CVs';
+                        
+                    } else {
+                        throw new Error(data.error || 'Upload failed');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    fileList.innerHTML += `<div class="alert alert-danger">Upload failed: ${error.message}</div>`;
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Upload CVs';
+                });
+            });
+            
+            processBtn.addEventListener('click', function() {
+                if (!filesUploaded) return;
+                
+                processBtn.disabled = true;
+                processBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...';
+                
+                fetch('/process', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        window.location.href = '/results';
+                    } else {
+                        throw new Error(data.error || 'Processing failed');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    fileList.innerHTML += `<div class="alert alert-danger">Processing failed: ${error.message}</div>`;
+                    processBtn.disabled = false;
+                    processBtn.textContent = 'Process CVs';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

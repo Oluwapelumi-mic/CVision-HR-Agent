@@ -1,0 +1,351 @@
+<!-- templates/about.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - CVision</title>
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='cvision-logo.svg') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <style>
+        :root {
+            --primary-color: #8a4fff;
+            --secondary-color: #6633cc;
+            --dark-blue: #1a1744;
+            --light-purple: #f3f0ff;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #ffffff;
+            background-image: linear-gradient(180deg, #ffffff 70%, var(--light-purple) 100%);
+            min-height: 100vh;
+        }
+        
+        .navbar {
+            padding: 1.2rem 2rem;
+            background-color: white;
+        }
+        
+        .navbar-brands {
+            font-weight: 700;
+            font-size: 2rem;
+            color: #8a4fff;
+            align-items: center;
+            font-style: italic;
+            text-decoration: none;
+        }
+        
+        .navbar-brands img {
+            height: 260px;
+        }
+        
+        .navbar-brands span {
+            background: linear-gradient(135deg, #8a4fff 0%, #6633cc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+            font-size: 3rem;
+        }
+        
+        .nav-link {
+            color: #555;
+            margin: 0 0.8rem;
+            transition: color 0.3s;
+            font-weight: normal;
+            font-size: 1.25rem; /* Increased font size */
+            padding: 0.5rem 1.2rem; /* Added more padding */
+        }
+
+        .nav-link.active {
+            font-weight: 800;
+            color: var(--primary-color);
+            font-size: 1.4rem; /* Even larger for active state */
+        }
+        
+        .call-now-btn {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.6rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .call-now-btn:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 51, 204, 0.3);
+        }
+
+        .about-section {
+            padding: 6rem 0;
+        }
+
+        .section-title {
+            color: var(--dark-blue);
+            font-weight: 800;
+            margin-bottom: 2rem;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+
+        .feature-title {
+            color: var(--dark-blue);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-align: center; /* Adding center alignment */
+        }
+
+        .benefits-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .benefits-list li {
+            position: relative;
+            padding-left: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .benefits-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        .tech-tag {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: var(--light-purple);
+            color: var(--dark-blue);
+            border-radius: 20px;
+            margin: 0.25rem;
+            font-size: 0.9rem;
+        }
+
+        .how-cvision-works {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--dark-blue);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .about-section {
+                padding: 3rem 0;
+            }
+            
+            .navbar-brands img {
+                height: 200px;
+            }
+            
+            .navbar-brands span {
+                font-size: 2.5rem;
+            }
+            
+            .how-cvision-works {
+                font-size: 2rem;
+                text-align: center;
+            }
+            
+            .feature-card {
+                margin: 0 1rem 1rem;
+            }
+            
+            .tech-tag {
+                font-size: 0.8rem;
+                padding: 0.4rem 0.8rem;
+            }
+            
+            .call-now-btn {
+                width: 100%;
+                margin-top: 1rem;
+                margin-left: 0 !important;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .navbar-brands img {
+                height: 160px;
+            }
+            
+            .navbar-brands span {
+                font-size: 2rem;
+            }
+            
+            .section-title {
+                font-size: 1.8rem;
+                text-align: center;
+            }
+            
+            .feature-title {
+                font-size: 1.2rem;
+            }
+            
+            .benefits-list li {
+                font-size: 0.9rem;
+                padding-left: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <img src="{{ url_for('static', filename='cvision-logo.svg') }}" alt="CVision Logo">
+                <span>CVision</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">HOME</a>
+                    </li>
+                </ul>
+                <a href="/about" class="btn call-now-btn ms-3">Learn More</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <section class="about-section">
+            <div class="row mb-5">
+                <div class="col-lg-8 mx-auto text-center">
+                    <a class="navbar-brands" href="/">
+                        <img src="{{ url_for('static', filename='cvision-logo.svg') }}" alt="CVision Logo">
+                        <span>CVision</span>
+                    </a>
+                    <h3 class="feature-title">Transforming Recruitment Through AI-Powered CV Analysis</h3>
+                    <p class="text-muted">Created by Iyere Michael (Adedeji), CVision leverages cutting-edge OCR, NLP, and machine learning technologies to automatically analyze resumes against job requirements, helping HR teams identify top talent quickly and objectively.</p>
+                </div>
+            </div>
+
+            <div class="row mb-5">
+                <div class="col-lg-8 mx-auto">
+                    <div class="feature-card">
+                        <h3 class="feature-title">Our Mission</h3>
+                        <p>At CVision, we're committed to transforming the traditional recruitment landscape by eliminating time-consuming manual resume reviews, reducing unconscious bias in candidate selection, and empowering organizations to make data-driven hiring decisions. Our platform is built to help you discover the perfect candidate match efficiently and effectively.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-5">
+                <div class="col-12">
+                    <h2 class="text-center mb-4 how-cvision-works">How CVision Works</h2>
+                    <div class="row">
+                        <div class="col-md-6 col-lg-3 mb-4">
+                            <div class="feature-card h-100">
+                                <h4 class="feature-title">Document Processing</h4>
+                                <p>CVision seamlessly processes CV documents in multiple formats (PDF, Word, plain text) and even scanned images through advanced OCR technology.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3 mb-4">
+                            <div class="feature-card h-100">
+                                <h4 class="feature-title">Information Extraction</h4>
+                                <p>Through sophisticated NER and section classification algorithms, CVision extracts and structures candidate information.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3 mb-4">
+                            <div class="feature-card h-100">
+                                <h4 class="feature-title">Smart Matching</h4>
+                                <p>Our platform matches candidate profiles against job requirements using semantic understanding of skills and experience.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3 mb-4">
+                            <div class="feature-card h-100">
+                                <h4 class="feature-title">Comprehensive Reports</h4>
+                                <p>Get clear, actionable insights through detailed reporting with candidate rankings and skill gap analysis.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-5">
+                <div class="col-lg-6 mb-4">
+                    <div class="feature-card h-100">
+                        <h3 class="feature-title">Key Benefits</h3>
+                        <ul class="benefits-list">
+                            <li>Save Time & Resources: Eliminate hours spent manually reviewing resumes</li>
+                            <li>Enhance Decision Quality: Make data-driven hiring decisions</li>
+                            <li>Reduce Bias: Minimize unconscious bias in screening</li>
+                            <li>Improve Hiring Outcomes: Identify truly matching candidates</li>
+                            <li>Increase Transparency: Understand ranking decisions</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-6 mb-4">
+                    <div class="feature-card h-100">
+                        <h3 class="feature-title">Technology Foundation</h3>
+                        <div class="mb-3">
+                            <h5 class="mb-2">Document Processing</h5>
+                            <div>
+                                <span class="tech-tag">Tesseract</span>
+                                <span class="tech-tag">Google Vision API</span>
+                                <span class="tech-tag">PDF parsing</span>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <h5 class="mb-2">Information Extraction</h5>
+                            <div>
+                                <span class="tech-tag">spaCy</span>
+                                <span class="tech-tag">NLTK</span>
+                                <span class="tech-tag">NER</span>
+                                <span class="tech-tag">LLMs</span>
+                            </div>
+                        </div>
+                        <div>
+                            <h5 class="mb-2">Machine Learning & AI</h5>
+                            <div>
+                                <span class="tech-tag">Semantic Embedding</span>
+                                <span class="tech-tag">Skill Matching</span>
+                                <span class="tech-tag">Experience Evaluation</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-8 mx-auto text-center">
+                    <h2 class="section-title">Transform Your Recruitment Process Today</h2>
+                    <p class="lead">Experience the power of AI-driven CV analysis and discover how CVision can help your organization identify top talent faster, make better hiring decisions, and streamline your recruitment workflow.</p>
+                    <a href="/" class="btn btn-lg call-now-btn mt-4">Get Started</a>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

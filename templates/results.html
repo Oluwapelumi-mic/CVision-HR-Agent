@@ -1,0 +1,736 @@
+<!-- templates/results.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Results - CVision</title>
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='cvision-logo.svg') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.0.1/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <style>
+        :root {
+            --primary-color: #8a4fff;
+            --secondary-color: #6633cc;
+            --dark-blue: #1a1744;
+            --light-purple: #f3f0ff;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #ffffff;
+            background-image: linear-gradient(180deg, #ffffff 70%, var(--light-purple) 100%);
+            min-height: 100vh;
+        }
+        
+        .navbar {
+            padding: 1.2rem 2rem;
+            background-color: white;
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 2rem;
+            color: #8a4fff;
+            display: flex;
+            align-items: center;
+            font-style: italic;
+            text-decoration: none;
+        }
+        
+        .navbar-brand img {
+            height: 40px;
+            margin-right: 10px;
+        }
+        
+        .navbar-brand span {
+            background: linear-gradient(135deg, #8a4fff 0%, #6633cc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+            font-size: 2rem;
+        }
+        
+        .nav-link {
+            color: #555;
+            margin: 0 0.8rem;
+            transition: color 0.3s;
+            font-weight: normal;
+            font-size: 1.25rem; /* Increased font size */
+            padding: 0.5rem 1.2rem; /* Added more padding */
+        }
+
+        .nav-link.active {
+            font-weight: 800;
+            color: var(--primary-color);
+            font-size: 1.4rem; /* Even larger for active state */
+        }
+        
+        .btn-primary, .btn-outline-secondary {
+            padding: 0.6rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 51, 204, 0.3);
+        }
+        
+        .btn-outline-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-outline-primary {
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .btn-outline-primary:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .hero-section {
+            padding: 4rem 0 3rem;
+            position: relative;
+        }
+        
+        .hero-section::after {
+            content: '';
+            position: absolute;
+            bottom: -50px;
+            left: 0;
+            width: 100%;
+            height: 200px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23f3f0ff' fill-opacity='1' d='M0,128L80,138.7C160,149,320,171,480,176C640,181,800,171,960,144C1120,117,1280,75,1360,53.3L1440,32L1440,320L1360,320C1280,320,1120,320,960,320C800,320,640,320,480,320C320,320,160,320,80,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
+            background-size: cover;
+            background-repeat: no-repeat;
+            z-index: -1;
+            pointer-events: none;
+        }
+        
+        .hero-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--dark-blue);
+            margin-bottom: 1rem;
+        }
+        
+        .hero-text {
+            font-size: 1.2rem;
+            color: #555;
+            margin-bottom: 2rem;
+        }
+        
+        .content-card {
+            border-radius: 12px;
+            border: none;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+        
+        .content-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+        }
+        
+        .card-header {
+            background-color: var(--primary-color);
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 600;
+            padding: 1.2rem 1.5rem;
+        }
+        
+        .call-now-btn {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.6rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .call-now-btn:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 51, 204, 0.3);
+        }
+        
+        /* Stats section like in the second image */
+        .stats-section {
+            background-color: var(--dark-blue);
+            color: white;
+            padding: 3rem 0;
+            margin-bottom: 3rem;
+        }
+        
+        .stats-number {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 0;
+        }
+        
+        .stats-label {
+            font-size: 1rem;
+            color: rgba(255,255,255,0.8);
+        }
+        
+        /* Table and candidate rankings styling */
+        .table-header-row {
+            background-color: var(--light-purple);
+        }
+        
+        .candidate-row:hover {
+            background-color: rgba(138, 79, 255, 0.05);
+        }
+        
+        .score-pill {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-weight: 600;
+            min-width: 60px;
+            text-align: center;
+        }
+        
+        .score-high {
+            background-color: rgba(40, 167, 69, 0.15);
+            color: #28a745;
+        }
+        
+        .score-medium {
+            background-color: rgba(255, 193, 7, 0.15);
+            color: #d39e00;
+        }
+        
+        .score-low {
+            background-color: rgba(220, 53, 69, 0.15);
+            color: #dc3545;
+        }
+        
+        .details-card {
+            border-left: 4px solid var(--primary-color);
+            border-radius: 0 12px 12px 0;
+        }
+        
+        /* Loading spinner styling */
+        .loading-container {
+            padding: 3rem;
+            text-align: center;
+        }
+        
+        .spinner-border {
+            width: 3rem;
+            height: 3rem;
+            color: var(--primary-color);
+        }
+        
+        /* Chat button */
+        .chat-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: var(--dark-blue);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+        
+        .chat-button:hover {
+            transform: scale(1.1);
+            background-color: var(--primary-color);
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2rem;
+                text-align: center;
+            }
+
+            .hero-text {
+                text-align: center;
+            }
+
+            .stats-section {
+                padding: 2rem 0;
+            }
+
+            .stats-number {
+                font-size: 2.5rem;
+            }
+
+            .stats-label {
+                font-size: 0.9rem;
+            }
+
+            .table-responsive {
+                margin: 0 -1rem;
+            }
+
+            .candidate-row td {
+                padding: 0.75rem;
+            }
+
+            .score-pill {
+                min-width: 50px;
+                padding: 0.2rem 0.6rem;
+                font-size: 0.9rem;
+            }
+
+            .details-card {
+                margin: 0.5rem;
+            }
+
+            .call-now-btn {
+                width: 100%;
+                margin-top: 1rem;
+                margin-left: 0 !important;
+            }
+
+            .chat-button {
+                bottom: 20px;
+                right: 20px;
+                width: 50px;
+                height: 50px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .hero-title {
+                font-size: 1.8rem;
+            }
+
+            .stats-number {
+                font-size: 2rem;
+            }
+
+            .candidate-row h6 {
+                font-size: 0.9rem;
+            }
+
+            .candidate-row small {
+                font-size: 0.8rem;
+            }
+
+            .btn-sm {
+                font-size: 0.8rem;
+                padding: 0.25rem 0.5rem;
+            }
+
+            .progress {
+                height: 6px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <img src="{{ url_for('static', filename='cvision-logo.svg') }}" alt="CVision Logo">
+                <span>CVision</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                </ul>
+                <a href="/about" class="btn call-now-btn ms-3">Learn More</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Hero Section -->
+        <div class="hero-section">
+            <div class="row align-items-center">
+                <div class="col-lg-8 mx-auto text-center">
+                    <h1 class="hero-title">Candidate Results</h1>
+                    <p class="hero-text">Analyzing the best matches for "<strong>{{ job_title }}</strong>"</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Stats Section (like in the second image) -->
+    <section class="stats-section">
+        <div class="container">
+            <div class="row text-center">
+                <div class="col-md-3 col-6 mb-4 mb-md-0">
+                    <p class="stats-number" id="total-candidates">0</p>
+                    <p class="stats-label">Candidates</p>
+                </div>
+                <div class="col-md-3 col-6 mb-4 mb-md-0">
+                    <p class="stats-number" id="shortlisted">0</p>
+                    <p class="stats-label">Shortlisted</p>
+                </div>
+                <div class="col-md-3 col-6">
+                    <p class="stats-number" id="avg-score">0.0</p>
+                    <p class="stats-label">Avg. Score</p>
+                </div>
+                <div class="col-md-3 col-6">
+                    <p class="stats-number" id="top-score">0.0</p>
+                    <p class="stats-label">Top Score</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="container mb-5">
+        <div class="row justify-content-center">
+            <div class="col-12">
+                <div class="content-card card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span>Candidate Rankings</span>
+                        <button class="btn btn-light btn-sm" id="export-btn" disabled>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="me-2">
+                                <path d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M7 10L12 15L17 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M12 15V3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            Export Results
+                        </button>
+                    </div>
+                    <div class="card-body p-0">
+                        <div id="loading" class="loading-container">
+                            <div class="spinner-border" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <p class="mt-3 text-muted">Processing CVs... This may take a few minutes.</p>
+                        </div>
+                        
+                        <div id="results-container" class="d-none">
+                            <!-- Results will be displayed here -->
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-center">
+                    <form action="/reset" method="post">
+                        <button type="submit" class="btn btn-outline-secondary">Start New Job</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating chat button -->
+    <div class="chat-button">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M21 11.5C21.0034 12.8199 20.6951 14.1219 20.1 15.3C19.3944 16.7118 18.3098 17.8992 16.9674 18.7293C15.6251 19.5594 14.0782 19.9994 12.5 20C11.1801 20.0035 9.87812 19.6951 8.7 19.1L3 21L4.9 15.3C4.30493 14.1219 3.99656 12.8199 4 11.5C4.00061 9.92179 4.44061 8.37488 5.27072 7.03258C6.10083 5.69028 7.28825 4.6056 8.7 3.90003C9.87812 3.30496 11.1801 2.99659 12.5 3.00003H13C15.0843 3.11502 17.053 3.99479 18.5291 5.47089C20.0052 6.94699 20.885 8.91568 21 11V11.5Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loadingElement = document.getElementById('loading');
+            const resultsContainer = document.getElementById('results-container');
+            const exportBtn = document.getElementById('export-btn');
+            const statsElements = {
+                totalCandidates: document.getElementById('total-candidates'),
+                shortlisted: document.getElementById('shortlisted'),
+                avgScore: document.getElementById('avg-score'),
+                topScore: document.getElementById('top-score')
+            };
+            
+            let pollCount = 0;
+            const maxPolls = 20; // Maximum number of polling attempts (60 seconds total)
+            
+            function checkResults() {
+                if (pollCount >= maxPolls) {
+                    loadingElement.innerHTML = `
+                        <div class="alert alert-warning mx-4 my-4">
+                            <h4 class="alert-heading">Processing taking longer than expected</h4>
+                            <p>The CV processing is taking longer than usual. Please check back later or try again.</p>
+                            <hr>
+                            <form action="/reset" method="post" class="mb-3">
+                                <button type="submit" class="btn btn-warning">Start New Job</button>
+                            </form>
+                            <button onclick="window.location.reload()" class="btn btn-outline-warning">
+                                Check Again
+                            </button>
+                        </div>`;
+                    return;
+                }
+
+                pollCount++;
+                
+                fetch('/api/results')
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.error) {
+                            throw new Error(data.error);
+                        }
+                        if (data.status === 'processing') {
+                            // Continue polling after 3 seconds
+                            setTimeout(checkResults, 3000);
+                        } else if (data.status === 'completed') {
+                            // Display results
+                            displayResults(data.results);
+                            loadingElement.classList.add('d-none');
+                            resultsContainer.classList.remove('d-none');
+                            exportBtn.disabled = false;
+                            updateStats(data.results);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        loadingElement.innerHTML = `
+                            <div class="alert alert-danger mx-4 my-4">
+                                <h4 class="alert-heading">Error loading results</h4>
+                                <p>${error.message}</p>
+                                <hr>
+                                <p class="mb-0">
+                                    <button onclick="checkResults()" class="btn btn-outline-danger">
+                                        Try Again
+                                    </button>
+                                </p>
+                            </div>`;
+                    });
+            }
+            
+            function updateStats(results) {
+                if (!results || results.length === 0) return;
+                
+                // Total candidates
+                statsElements.totalCandidates.textContent = results.length;
+                
+                // Shortlisted candidates (assuming "Shortlist" in recommendation)
+                const shortlistedCount = results.filter(r => 
+                    r.recommendation && r.recommendation.toLowerCase().includes('shortlist')
+                ).length;
+                statsElements.shortlisted.textContent = shortlistedCount;
+                
+                // Average score
+                const totalScore = results.reduce((sum, r) => sum + (parseFloat(r.overall_score) || 0), 0);
+                const avgScore = results.length > 0 ? (totalScore / results.length).toFixed(1) : '0.0';
+                statsElements.avgScore.textContent = avgScore;
+                
+                // Top score
+                const topScore = results.length > 0 ? 
+                    Math.max(...results.map(r => parseFloat(r.overall_score) || 0)).toFixed(1) : '0.0';
+                statsElements.topScore.textContent = topScore;
+            }
+            
+            function displayResults(results) {
+                if (!results || results.length === 0) {
+                    resultsContainer.innerHTML = '<div class="alert alert-warning m-4">No results available. Try processing again.</div>';
+                    return;
+                }
+                
+                let html = `
+                    <div class="table-responsive">
+                        <table class="table table-borderless">
+                            <thead>
+                                <tr class="table-header-row">
+                                    <th class="ps-4">Rank</th>
+                                    <th>Candidate</th>
+                                    <th>Score</th>
+                                    <th>Recommendation</th>
+                                    <th class="text-end pe-4">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                `;
+                
+                results.forEach((result, index) => {
+                    // Determine score class
+                    const scoreValue = parseFloat(result.overall_score) || 0;
+                    const scoreClass = scoreValue >= 7 ? 'score-high' : 
+                                       scoreValue >= 5 ? 'score-medium' : 'score-low';
+                    
+                    // Format recommendation badge
+                    let recommendationBadge = '';
+                    if (result.recommendation) {
+                        const badgeClass = result.recommendation.toLowerCase().includes('shortlist') ? 'bg-success' :
+                                          result.recommendation.toLowerCase().includes('consider') ? 'bg-warning' : 'bg-danger';
+                        recommendationBadge = `<span class="badge ${badgeClass}">${result.recommendation}</span>`;
+                    }
+                    
+                    html += `
+                        <tr class="candidate-row">
+                            <td class="ps-4 align-middle">${index + 1}</td>
+                            <td class="align-middle">
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-light rounded-circle p-2 me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21" stroke="#8a4fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M12 11C14.2091 11 16 9.20914 16 7C16 4.79086 14.2091 3 12 3C9.79086 3 8 4.79086 8 7C8 9.20914 9.79086 11 12 11Z" stroke="#8a4fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-0">${result.candidate_name || 'Unknown'}</h6>
+                                        <small class="text-muted">${result.cv_filename || 'No file'}</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="align-middle">
+                                <span class="score-pill ${scoreClass}">${result.overall_score || '0'}/10</span>
+                            </td>
+                            <td class="align-middle">${recommendationBadge}</td>
+                            <td class="text-end pe-4 align-middle">
+                                <button class="btn btn-sm btn-outline-primary" type="button" data-bs-toggle="collapse" 
+                                       data-bs-target="#details-${index}" aria-expanded="false">
+                                    View Details
+                                </button>
+                            </td>
+                        </tr>
+                        <tr class="collapse bg-light" id="details-${index}">
+                            <td colspan="5" class="p-0">
+                                <div class="details-card card card-body m-3">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <h5 class="mb-3">Score Breakdown</h5>
+                                            <div class="mb-4">
+                                                <div class="d-flex justify-content-between mb-1">
+                                                    <span>Skills Match</span>
+                                                    <span>${result.skills_match_score || '0'}/10</span>
+                                                </div>
+                                                <div class="progress" style="height: 8px;">
+                                                    <div class="progress-bar bg-primary" role="progressbar" 
+                                                         style="width: ${(result.skills_match_score || 0) * 10}%" 
+                                                         aria-valuenow="${result.skills_match_score || 0}" 
+                                                         aria-valuemin="0" aria-valuemax="10"></div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="mb-4">
+                                                <div class="d-flex justify-content-between mb-1">
+                                                    <span>Experience Relevance</span>
+                                                    <span>${result.experience_relevance_score || '0'}/10</span>
+                                                </div>
+                                                <div class="progress" style="height: 8px;">
+                                                    <div class="progress-bar bg-success" role="progressbar" 
+                                                         style="width: ${(result.experience_relevance_score || 0) * 10}%" 
+                                                         aria-valuenow="${result.experience_relevance_score || 0}" 
+                                                         aria-valuemin="0" aria-valuemax="10"></div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="mb-4">
+                                                <div class="d-flex justify-content-between mb-1">
+                                                    <span>Education & Qualifications</span>
+                                                    <span>${result.education_qualifications_score || '0'}/10</span>
+                                                </div>
+                                                <div class="progress" style="height: 8px;">
+                                                    <div class="progress-bar bg-info" role="progressbar" 
+                                                         style="width: ${(result.education_qualifications_score || 0) * 10}%" 
+                                                         aria-valuenow="${result.education_qualifications_score || 0}" 
+                                                         aria-valuemin="0" aria-valuemax="10"></div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="mb-4">
+                                                <div class="d-flex justify-content-between mb-1">
+                                                    <span>Potential & Cultural Fit</span>
+                                                    <span>${result.potential_cultural_fit_score || '0'}/10</span>
+                                                </div>
+                                                <div class="progress" style="height: 8px;">
+                                                    <div class="progress-bar bg-warning" role="progressbar" 
+                                                         style="width: ${(result.potential_cultural_fit_score || 0) * 10}%" 
+                                                         aria-valuenow="${result.potential_cultural_fit_score || 0}" 
+                                                         aria-valuemin="0" aria-valuemax="10"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-md-6">
+                                            <h5 class="mb-3">Key Insights</h5>
+                                            
+                                            <div class="mb-3">
+                                                <h6 class="text-success">Strengths</h6>
+                                                <ul class="mb-4">
+                    `;
+                    
+                    if (result.strengths && result.strengths.length > 0) {
+                        result.strengths.forEach(strength => {
+                            html += `<li>${strength}</li>`;
+                        });
+                    } else {
+                        html += `<li>No strengths identified</li>`;
+                    }
+                    
+                    html += `
+                                                </ul>
+                                                
+                                                <h6 class="text-danger">Areas for Improvement</h6>
+                                                <ul>
+                    `;
+                    
+                    if (result.weaknesses && result.weaknesses.length > 0) {
+                        result.weaknesses.forEach(weakness => {
+                            html += `<li>${weakness}</li>`;
+                        });
+                    } else {
+                        html += `<li>No weaknesses identified</li>`;
+                    }
+                    
+                    html += `
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mt-3">
+                                        <h6>Reasoning:</h6>
+                                        <p>${result.reasoning || 'No reasoning provided'}</p>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
+                
+                html += `
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+                
+                resultsContainer.innerHTML = html;
+            }
+            
+            // Export functionality (placeholder)
+            exportBtn.addEventListener('click', function() {
+                alert('Export functionality would go here in a real application');
+            });
+            
+            // Start checking for results
+            checkResults();
+        });
+    </script>
+</body>
+</html>
