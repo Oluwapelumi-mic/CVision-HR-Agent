@@ -341,6 +341,17 @@ def index():
 def about():
     return render_template('about.html')
 
+@app.route('/upload')
+def upload_cvs():
+    """Page for uploading CVs."""
+    job_id = session.get('current_job_id')
+    job_title = session.get('current_job_title')
+    
+    if not job_id or not job_title:
+        return redirect(url_for('index'))
+    
+    return render_template('upload.html', job_title=job_title)
+
 @app.route('/create-job', methods=['POST'])
 def create_job():
     """Create a new job posting and store the job description."""
@@ -365,17 +376,6 @@ def create_job():
     session['current_job_title'] = job_title
     
     return redirect(url_for('upload_cvs'))
-
-@app.route('/upload')
-def upload_cvs():
-    """Page for uploading CVs."""
-    job_id = session.get('current_job_id')
-    job_title = session.get('current_job_title')
-    
-    if not job_id or not job_title:
-        return redirect(url_for('index'))
-    
-    return render_template('upload.html', job_title=job_title)
 
 @app.route('/upload-cv', methods=['POST'])
 def upload_cv():
